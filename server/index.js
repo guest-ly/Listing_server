@@ -26,4 +26,6 @@ app.get('/listing/amenity/:listingID',(req,res)=>{
         res.json(data[0])
     })
 })
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+module.exports = app;
