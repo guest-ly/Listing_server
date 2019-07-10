@@ -72,7 +72,11 @@ var generatedesc = (num) => {
         
     for(var i=0; i<descsubtitle.length; i++){
         if(i===5){
-            obj.desc[descsubtitle[i]] = 'STR-' + faker.random.alphaNumeric(7);
+            var licensenum = ''
+            for(var n=0;n<7;n++){
+                licensenum += faker.random.number({min:0, max:9})
+            }
+            obj.desc[descsubtitle[i]] = 'STR-' + licensenum;
         } else {
             obj.desc[descsubtitle[i]]= faker.lorem.paragraphs();
         }
@@ -85,20 +89,26 @@ var generateamen = (num) =>{
     let obj = {}
     obj.id = num;
     var necessary = {
-        wifi: 'Continuous access in the listing',
-        tv: null,
-        dryer: 'In the building, free or for a fee',
-        washer: 'In the building, free or for a fee', 
-        iron: null, 
-        heating: 'Central heating or a heater in the listing',
-        hotwater: null,
-        essentials: 'Towels, bed sheets, soap, and toilet paper',
-        ac: null,
-        workspace: 'A table or desk with space for a laptop and a chair that’s comfortable to work in'
+        'Wifi': 'Continuous access in the listing',
+        'TV': null,
+        'Cable TV': null,
+        'Kitchen': 'Space where guests can cook their own meals',
+        'Iron': null, 
+        'Dryer': 'In the building, free or for a fee',
+        'Washer': 'In the building, free or for a fee', 
+        'Hotwater': null,
+        'Essentials': 'Towels, bed sheets, soap, and toilet paper',       
+        'Laptop friendly workspace': 'A table or desk with space for a laptop and a chair that’s comfortable to work in',
+        'Hot water': null,
+        'Air conditioning': null,
+        'Free parking on premises': null,
+        'Hair dryer': null,
+
+    
     }
    
     var shuffleNecKeys = Object.keys(necessary).sort(() => Math.random()-0.5);
-    var randomIndex= faker.random.number({min:1, max:shuffleNecKeys.length})
+    var randomIndex= faker.random.number({min:4, max:shuffleNecKeys.length-1})
     var selectKeys = shuffleNecKeys.slice(0,randomIndex);
     // console.log('yes===',selectKeys)
     var nonSelectKeys = shuffleNecKeys.slice(randomIndex,shuffleNecKeys.length);
@@ -106,13 +116,13 @@ var generateamen = (num) =>{
     // console.log('test????',necessary[selectKeys[0]])
     // var options = ['Dining','Guest access','Bed and bath','Outdoor','Safety features','Logistrics', 'Facilities','Family features'];
     obj.amenities = {};
-    obj.amenities.basic = {};
+    obj.amenities['Basic'] = {};
     for(var i=0; i<selectKeys.length; i++){
-        obj.amenities.basic[selectKeys[i]] = necessary[selectKeys[i]]
+        obj.amenities['Basic'][selectKeys[i]] = necessary[selectKeys[i]]
     }
-    obj.amenities.notincluded = {};
+    obj.amenities['Not included'] = {};
     for(var i=0; i<nonSelectKeys.length; i++){
-        obj.amenities.notincluded[nonSelectKeys[i]] = null;
+        obj.amenities['Not included'][nonSelectKeys[i]] = null;
     }
 
     return obj;
