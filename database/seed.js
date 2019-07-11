@@ -15,25 +15,42 @@ var generatedesc = (num) => {
     obj.detail.type = faker.random.arrayElement(['Entire place','Private room','Hotel room','Shared room']);
     var generatedetail = (type) => {
         if(type === 'Entire place'){
+
             obj.detail.bedrmnum = faker.random.number({min:3, max:6});
             obj.detail.bathrmnum = faker.random.number({min:1, max:obj.detail.bedrmnum});
             obj.detail.guestmax = faker.random.number({min:obj.detail.bedrmnum, max:obj.detail.bedrmnum*2+2});
-            obj.detail.bednum = obj.detail.bedrmnum;
+            var bedoptions = ['1 queen bed','1 single bed','1 king bed']
+            var beds = []
+            for(var i=0; i<obj.detail.bedrmnum; i++){
+                beds.push(bedoptions[Math.floor(Math.random()*bedoptions.length)])
+            }
+            obj.detail.bednum = beds;
+            
         } else if (type === 'Private room'){
             obj.detail.bedrmnum = 1;
             obj.detail.bathrmnum = 1;
             obj.detail.guestmax = faker.random.number({min:1, max:3});
-            obj.detail.bednum = obj.detail.bedrmnum;
+            var bedoptions = ['1 queen bed','1 single bed','1 king bed']
+            var bedoption = bedoptions[Math.floor(Math.random()*bedoptions.length)]
+            obj.detail.bednum = [bedoption];
+            
         } else if (type === 'Hotel room'){
             obj.detail.bedrmnum = faker.random.number({min:1, max:3});
             obj.detail.bathrmnum = faker.random.number({min:1, max:obj.detail.bedrmnum});
             obj.detail.guestmax = faker.random.number({min:obj.detail.bedrmnum, max:obj.detail.bedrmnum*2+2});
-            obj.detail.bednum = obj.detail.bedrmnum;
+            var bedoptions = ['1 queen bed','1 single bed','1 king bed']
+            var beds = []
+            for(var i=0; i<obj.detail.bedrmnum; i++){
+                beds.push(bedoptions[Math.floor(Math.random()*bedoptions.length)])
+            }
+            obj.detail.bednum = beds;
         } else if (type === 'Shared room'){
             obj.detail.bedrmnum = 1;
             obj.detail.bathrmnum = faker.random.number({min:obj.detail.bedrmnum, max:obj.detail.bedrmnum});
             obj.detail.guestmax = faker.random.number({min:1, max:obj.detail.bedrmnum*4});
-            obj.detail.bednum = obj.detail.bedrmnum;
+            var bedoptions = ['1 queen bed','1 single bed'];
+            var bedoption = bedoptions[Math.floor(Math.random()*bedoptions.length)]
+            obj.detail.bednum = [bedoption];
         }
     }
     generatedetail(obj.detail.type);
