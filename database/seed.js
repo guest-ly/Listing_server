@@ -2,7 +2,6 @@
 const faker = require('faker');
 const db = require('./index')
 
-
 var generatedesc = (num) => {
     let obj = {}
     obj.id = num;
@@ -15,7 +14,6 @@ var generatedesc = (num) => {
     obj.detail.type = faker.random.arrayElement(['Entire place','Private room','Hotel room','Shared room']);
     var generatedetail = (type) => {
         if(type === 'Entire place'){
-            
             obj.detail.bedrmnum = faker.random.number({min:3, max:6});
             obj.detail.bathrmnum = faker.random.number({min:1, max:obj.detail.bedrmnum});
             obj.detail.guestmax = faker.random.number({min:obj.detail.bedrmnum, max:obj.detail.bedrmnum*2+2});
@@ -37,7 +35,7 @@ var generatedesc = (num) => {
             obj.detail.bedrmnum = faker.random.number({min:1, max:3});
             obj.detail.bathrmnum = faker.random.number({min:1, max:obj.detail.bedrmnum});
             obj.detail.guestmax = faker.random.number({min:obj.detail.bedrmnum, max:obj.detail.bedrmnum*2+2});
-            var bedoptions = ['1 queen bed','1 single bed','1 king bed']
+            var bedoptions = ['1 queen bed','1 single bed','1 king bed','2 single bed']
             var beds = []
             for(var i=0; i<obj.detail.bedrmnum; i++){
                 beds.push(bedoptions[Math.floor(Math.random()*bedoptions.length)])
@@ -82,7 +80,6 @@ var generatedesc = (num) => {
     for(let i=0; i<3; i++){
         obj.highlights[highlightsoptions[i]]= faker.lorem.sentence()
     }
-        
     obj.desc = {};
     var descsubtitle = ['General','The space', 'Guest access', 'Interation with guests', 'Other things to note','License or registartion number']
         
@@ -97,7 +94,6 @@ var generatedesc = (num) => {
             obj.desc[descsubtitle[i]]= faker.lorem.paragraphs();
         }
     }
-    // console.log('obj====',obj)
     return obj;
 }
 /* ================================================================ */
@@ -119,7 +115,6 @@ var generateamen = (num) =>{
         'Hot water': null,
         'Air conditioning': null,
         'Free parking on premises': null,
-        
     }
     var allIconAmenShuffle = Object.keys(necessary).slice(0,8).sort(() => Math.random()-0.5);
     var selectKeys = allIconAmenShuffle.slice(0,4)
@@ -133,8 +128,7 @@ var generateamen = (num) =>{
     var nonSelectKeys = Object.keys(necessary).filter(amen=> 
         !selectKeys.includes(amen)
         )
-    console.log('no===',nonSelectKeys)
-    // console.log('test????',necessary[selectKeys[0]])
+    // console.log('no===',nonSelectKeys)
     // var options = ['Dining','Guest access','Bed and bath','Outdoor','Safety features','Logistrics', 'Facilities','Family features'];
     obj.amenities = {};
     obj.amenities['Basic'] = {};
@@ -145,7 +139,6 @@ var generateamen = (num) =>{
     for(var i=0; i<nonSelectKeys.length; i++){
         obj.amenities['Not included'][nonSelectKeys[i]] = null;
     }
-
     return obj;
 }
 
@@ -154,14 +147,14 @@ for(var i=1;i<=100;i++){
         if(err){
             console.log(err)
         }  else {
-            // console.log('desc data insert success')
+            console.log('desc data insert success')
         }
     });
     db.Amenity.create(generateamen(i),(err,res)=>{
         if(err){
             console.log(err)
         }  else {
-            // console.log('amenity data insert success')
+            console.log('amenity data insert success')
         }
     });
 }
