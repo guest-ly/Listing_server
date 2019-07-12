@@ -15,7 +15,7 @@ var generatedesc = (num) => {
     obj.detail.type = faker.random.arrayElement(['Entire place','Private room','Hotel room','Shared room']);
     var generatedetail = (type) => {
         if(type === 'Entire place'){
-
+            
             obj.detail.bedrmnum = faker.random.number({min:3, max:6});
             obj.detail.bathrmnum = faker.random.number({min:1, max:obj.detail.bedrmnum});
             obj.detail.guestmax = faker.random.number({min:obj.detail.bedrmnum, max:obj.detail.bedrmnum*2+2});
@@ -25,7 +25,6 @@ var generatedesc = (num) => {
                 beds.push(bedoptions[Math.floor(Math.random()*bedoptions.length)])
             }
             obj.detail.bednum = beds;
-            
         } else if (type === 'Private room'){
             obj.detail.bedrmnum = 1;
             obj.detail.bathrmnum = 1;
@@ -113,23 +112,28 @@ var generateamen = (num) =>{
         'Iron': null, 
         'Dryer': 'In the building, free or for a fee',
         'Washer': 'In the building, free or for a fee', 
+        'Hangers':null,
         'Hotwater': null,
         'Essentials': 'Towels, bed sheets, soap, and toilet paper',       
         'Laptop friendly workspace': 'A table or desk with space for a laptop and a chair that’s comfortable to work in',
         'Hot water': null,
         'Air conditioning': null,
         'Free parking on premises': null,
-        'Hair dryer': null,
-
-    
+        
     }
-   
-    var shuffleNecKeys = Object.keys(necessary).sort(() => Math.random()-0.5);
-    var randomIndex= faker.random.number({min:4, max:shuffleNecKeys.length-1})
-    var selectKeys = shuffleNecKeys.slice(0,randomIndex);
+    var allIconAmenShuffle = Object.keys(necessary).slice(0,8).sort(() => Math.random()-0.5);
+    var selectKeys = allIconAmenShuffle.slice(0,4)
+    var restAmen = Object.keys(necessary).filter(amen=> 
+        !selectKeys.includes(amen)
+        )
+    var shuffleRestAmen = restAmen.sort(() => Math.random()-0.5);
+    var randomIndex= faker.random.number({min:1, max:shuffleRestAmen.length-1})
+    selectKeys = selectKeys.concat(shuffleRestAmen.slice(0,randomIndex));
     // console.log('yes===',selectKeys)
-    var nonSelectKeys = shuffleNecKeys.slice(randomIndex,shuffleNecKeys.length);
-    // console.log('no===',nonSelectKeys)
+    var nonSelectKeys = Object.keys(necessary).filter(amen=> 
+        !selectKeys.includes(amen)
+        )
+    console.log('no===',nonSelectKeys)
     // console.log('test????',necessary[selectKeys[0]])
     // var options = ['Dining','Guest access','Bed and bath','Outdoor','Safety features','Logistrics', 'Facilities','Family features'];
     obj.amenities = {};
@@ -150,14 +154,14 @@ for(var i=1;i<=100;i++){
         if(err){
             console.log(err)
         }  else {
-            console.log('desc data insert success')
+            // console.log('desc data insert success')
         }
     });
     db.Amenity.create(generateamen(i),(err,res)=>{
         if(err){
             console.log(err)
         }  else {
-            console.log('amenity data insert success')
+            // console.log('amenity data insert success')
         }
     });
 }
