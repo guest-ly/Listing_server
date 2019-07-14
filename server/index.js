@@ -7,7 +7,8 @@ const port = 3000;
 const path = require('path');
 
 app.use(bodyParser.json());
-app.use(express.static(path.resolve(__dirname,"../../Listing/public")))
+app.use('/listing/:listingID',express.static(path.resolve(__dirname,"../../Listing/public")))
+
 app.get('/listing/desc/:listingID',(req,res)=>{
     var id = req.params.listingID
     db.findDesc(id,(err,data)=>{

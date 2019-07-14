@@ -5,7 +5,8 @@ const db = require('./index')
 var generatedesc = (num) => {
     let obj = {}
     obj.id = num;
-    obj.title =  faker.lorem.sentence();
+    var title = faker.lorem.sentence()
+    obj.title =  title.slice(0,title.length-1);
     obj.location = faker.address.city();
     obj.host = {};
         obj.host.name = faker.name.firstName();
@@ -14,40 +15,49 @@ var generatedesc = (num) => {
     obj.detail.type = faker.random.arrayElement(['Entire place','Private room','Hotel room','Shared room']);
     var generatedetail = (type) => {
         if(type === 'Entire place'){
+            var bedcounter = 0;
             obj.detail.bedrmnum = faker.random.number({min:3, max:6});
             obj.detail.bathrmnum = faker.random.number({min:1, max:obj.detail.bedrmnum});
             obj.detail.guestmax = faker.random.number({min:obj.detail.bedrmnum, max:obj.detail.bedrmnum*2+2});
-            var bedoptions = ['1 queen bed','1 single bed','1 king bed']
+            var bedoptions = ['1 queen bed','1 single bed','1 king bed','2 single beds']
             var beds = []
             for(var i=0; i<obj.detail.bedrmnum; i++){
-                beds.push(bedoptions[Math.floor(Math.random()*bedoptions.length)])
+                var currBedoption = bedoptions[Math.floor(Math.random()*bedoptions.length)]
+                bedcounter += parseInt(currBedoption.slice(0,1))
+                beds.push(currBedoption)
             }
-            obj.detail.bednum = beds;
+            obj.detail.beds = beds;
+            obj.detail.bednum = bedcounter;
         } else if (type === 'Private room'){
             obj.detail.bedrmnum = 1;
             obj.detail.bathrmnum = 1;
             obj.detail.guestmax = faker.random.number({min:1, max:3});
-            var bedoptions = ['1 queen bed','1 single bed','1 king bed']
+            var bedoptions = ['1 queen bed','1 single bed','1 king bed','2 single beds']
             var bedoption = bedoptions[Math.floor(Math.random()*bedoptions.length)]
-            obj.detail.bednum = [bedoption];
-            
+            obj.detail.beds = [bedoption];
+            obj.detail.bednum = parseInt(bedoption.slice(0,1));
         } else if (type === 'Hotel room'){
+            var bedcounter = 0;
             obj.detail.bedrmnum = faker.random.number({min:1, max:3});
             obj.detail.bathrmnum = faker.random.number({min:1, max:obj.detail.bedrmnum});
             obj.detail.guestmax = faker.random.number({min:obj.detail.bedrmnum, max:obj.detail.bedrmnum*2+2});
-            var bedoptions = ['1 queen bed','1 single bed','1 king bed','2 single bed']
+            var bedoptions = ['1 queen bed','1 single bed','1 king bed','2 single beds']
             var beds = []
             for(var i=0; i<obj.detail.bedrmnum; i++){
-                beds.push(bedoptions[Math.floor(Math.random()*bedoptions.length)])
+                var currBedoption = bedoptions[Math.floor(Math.random()*bedoptions.length)]
+                bedcounter += parseInt(currBedoption.slice(0,1))
+                beds.push(currBedoption)
             }
-            obj.detail.bednum = beds;
+            obj.detail.beds = beds;
+            obj.detail.bednum = bedcounter;
         } else if (type === 'Shared room'){
             obj.detail.bedrmnum = 1;
             obj.detail.bathrmnum = faker.random.number({min:obj.detail.bedrmnum, max:obj.detail.bedrmnum});
             obj.detail.guestmax = faker.random.number({min:1, max:obj.detail.bedrmnum*4});
-            var bedoptions = ['1 queen bed','1 single bed'];
+            var bedoptions = ['1 queen bed','1 single bed','2 single beds'];
             var bedoption = bedoptions[Math.floor(Math.random()*bedoptions.length)]
-            obj.detail.bednum = [bedoption];
+            obj.detail.beds = [bedoption];
+            obj.detail.bednum = parseInt(bedoption.slice(0,1));
         }
     }
     generatedetail(obj.detail.type);
@@ -129,12 +139,34 @@ var generateamen = (num) =>{
         !selectKeys.includes(amen)
         )
     // console.log('no===',nonSelectKeys)
-    // var options = ['Dining','Guest access','Bed and bath','Outdoor','Safety features','Logistrics', 'Facilities','Family features'];
+    
+    var options = ['Dining','Guest access','Bed and bath','Outdoor','Safety features','Logistrics', 'Facilities','Family features'];
+    var randomOptionNum = faker.random.number({min:1, max:3});
+    var selectedOptions = options.sort(() => Math.random()-0.5).slice(0,randomOptionNum)
+   
     obj.amenities = {};
     obj.amenities['Basic'] = {};
     for(var i=0; i<selectKeys.length; i++){
         obj.amenities['Basic'][selectKeys[i]] = necessary[selectKeys[i]]
     }
+
+    for(var i=0; i<selectedOptions.length; i++){
+        //selectedOptions[0] = 'Dining'
+        obj.amenities[selectedOptions[i]] = {}
+        let randomNum  = faker.random.number({min:2, max:3});
+        let randomComment = faker.random.number({min:0, max:1});
+        for(var j=0; j<randomNum; j++){
+            var fakeAmen = faker.lorem.word();
+            if(j*randomComment===0){
+                obj.amenities[selectedOptions[i]][fakeAmen] = null
+            } else {
+                var fakeComment = faker.lorem.words();
+                obj.amenities[selectedOptions[i]][fakeAmen] = fakeComment
+            }
+        }
+    }
+
+
     obj.amenities['Not included'] = {};
     for(var i=0; i<nonSelectKeys.length; i++){
         obj.amenities['Not included'][nonSelectKeys[i]] = null;
